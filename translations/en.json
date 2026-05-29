@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Smartschool Results",
+        "description": "Set up your Smartschool account. The date of birth is used for automatic account verification required by Smartschool.",
+        "data": {
+          "base_url": "Smartschool URL",
+          "username": "Username",
+          "password": "Password",
+          "birthday": "Date of birth (YYYY-MM-DD)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid credentials or verification failed",
+      "cannot_connect": "Cannot connect",
+      "invalid_base_url": "Invalid URL (must start with http:// or https://)",
+      "invalid_birthday": "Invalid date of birth (use format YYYY-MM-DD, e.g. 2010-03-15)",
+      "unknown": "Unknown error"
+    },
+    "abort": {
+      "already_configured": "This account is already configured"
+    }
+  }
+}

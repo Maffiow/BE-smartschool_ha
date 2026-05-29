@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Smartschool Resultaten",
+        "description": "Stel je Smartschool-account in. De geboortedatum wordt gebruikt voor de automatische account-verificatie die Smartschool vereist.",
+        "data": {
+          "base_url": "Smartschool URL",
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord",
+          "birthday": "Geboortedatum (JJJJ-MM-DD)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ongeldige logingegevens of verificatie mislukt",
+      "cannot_connect": "Kan geen verbinding maken",
+      "invalid_base_url": "Ongeldige URL (moet met http:// of https:// beginnen)",
+      "invalid_birthday": "Ongeldige geboortedatum (gebruik formaat JJJJ-MM-DD, bv. 2010-03-15)",
+      "unknown": "Onbekende fout"
+    },
+    "abort": {
+      "already_configured": "Deze account is al geconfigureerd"
+    }
+  }
+}
