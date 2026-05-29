@@ -155,6 +155,7 @@ content: |-
   _Geen recente resultaten beschikbaar._
   {% endif %}
 ```
+<img width="1503" height="1000" alt="image" src="https://github.com/user-attachments/assets/b43306e5-e990-4830-847d-e89a8fb67b56" />
 
 ## Opmerkingen
 
