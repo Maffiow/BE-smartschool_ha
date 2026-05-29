@@ -156,27 +156,6 @@ content: |-
   {% endif %}
 ```
 
-## Problemen oplossen
-
-### Debug logging inschakelen
-
-Voeg dit toe aan `configuration.yaml`:
-
-```yaml
-logger:
-  default: warning
-  logs:
-    custom_components.smartschool_ha: debug
-```
-
-### Veelvoorkomende fouten
-
-| Fout | Oorzaak | Oplossing |
-|:-----|:--------|:----------|
-| Ongeldige logingegevens | Gebruikersnaam of wachtwoord fout | Controleer de gegevens |
-| Ongeldige geboortedatum | Geboortedatum klopt niet of verkeerd formaat | Gebruik exact formaat `JJJJ-MM-DD` |
-| Geen resultaten | Sessie verlopen of API onbereikbaar | Integratie herstart automatisch; check debug logs |
-
 ## Opmerkingen
 
 - De integratie pollt standaard elke **15 minuten**
