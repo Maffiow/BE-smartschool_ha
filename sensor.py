@@ -75,6 +75,8 @@ async def async_setup_entry(
 
             evaluations = await hass.async_add_executor_job(api.get_all_evaluations)
             students = await hass.async_add_executor_job(api.get_students)
+            
+            _LOGGER.warning("SMARTSCHOOL STUDENTS DEBUG: %s", students)
 
             if evaluations is None:
                 _LOGGER.warning("Smartschool returned no evaluation data.")
