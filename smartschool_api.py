@@ -405,62 +405,62 @@ class SmartschoolAPI:
             {k: len(v["history"]) for k, v in by_course.items()},
         )
         return {"by_course": by_course, "latest": latest, "recent": recent}
-   def _fetch_students(self) -> list | None:
-    """Fetch students from Smartschool Studentcard API."""
-    warm = self._session.get(
-        self._studentcard_url,
-        timeout=20,
-        allow_redirects=True,
-        headers={
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Referer": f"{self._base_url}/",
-        },
-    )
-    warm.raise_for_status()
-
-    if self._is_account_verification_page(warm) or self._is_login_page(warm):
-        _LOGGER.debug("Studentcard warmup redirected to auth page — session lost")
-        return None
-
-    headers = {
-        "Accept": "application/json, text/javascript, */*; q=0.01",
-        "X-Requested-With": "XMLHttpRequest",
-        "Referer": f"{self._base_url}/Studentcard",
-        "Origin": self._base_url,
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-    }
-
-    resp = self._session.post(
-        self._students_url,
-        data={},
-        timeout=20,
-        allow_redirects=True,
-        headers=headers,
-    )
-    resp.raise_for_status()
-
-    if self._is_account_verification_page(resp) or self._is_login_page(resp):
-        _LOGGER.debug("Students API redirected to auth page — session lost")
-        return None
-
-    ctype = (resp.headers.get("Content-Type") or "").lower()
-
-    _LOGGER.warning(
-        "SMARTSCHOOL STUDENTS API DEBUG: status=%s ctype=%s url=%s body=%s",
-        resp.status_code,
-        ctype,
-        resp.url,
-        (resp.text or "")[:500].replace("\n", " "),
-    )
-
-    if "json" not in ctype:
-        return None
-
-    data = resp.json()
-
-    return data if isinstance(data, list) else None
+    def _fetch_students(self) -> list | None:
+        """Fetch students from Smartschool Studentcard API."""
+        warm = self._session.get(
+            self._studentcard_url,
+            timeout=20,
+            allow_redirects=True,
+            headers={
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Referer": f"{self._base_url}/",
+            },
+        )
+        warm.raise_for_status()
+    
+        if self._is_account_verification_page(warm) or self._is_login_page(warm):
+            _LOGGER.debug("Studentcard warmup redirected to auth page — session lost")
+            return None
+    
+        headers = {
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": f"{self._base_url}/Studentcard",
+            "Origin": self._base_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+        }
+    
+        resp = self._session.post(
+            self._students_url,
+            data={},
+            timeout=20,
+            allow_redirects=True,
+            headers=headers,
+        )
+        resp.raise_for_status()
+    
+        if self._is_account_verification_page(resp) or self._is_login_page(resp):
+            _LOGGER.debug("Students API redirected to auth page — session lost")
+            return None
+    
+        ctype = (resp.headers.get("Content-Type") or "").lower()
+    
+        _LOGGER.warning(
+            "SMARTSCHOOL STUDENTS API DEBUG: status=%s ctype=%s url=%s body=%s",
+            resp.status_code,
+            ctype,
+            resp.url,
+            (resp.text or "")[:500].replace("\n", " "),
+        )
+    
+        if "json" not in ctype:
+            return None
+    
+        data = resp.json()
+    
+        return data if isinstance(data, list) else None
 
     def get_students(self) -> list:
         """Return students linked to the current account."""
