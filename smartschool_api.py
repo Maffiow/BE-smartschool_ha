@@ -29,6 +29,7 @@ class SmartschoolAPI:
         self._username = username
         self._password = password
         self._birthday = birthday
+        self._students_url = f"{self._base_url}/Studentcard/Student/getStudents"
         self._session = requests.Session()
         self._is_logged_in = False
 
@@ -403,3 +404,60 @@ class SmartschoolAPI:
             {k: len(v["history"]) for k, v in by_course.items()},
         )
         return {"by_course": by_course, "latest": latest, "recent": recent}
+    def _fetch_students(self) -> list | None:
+        """Fetch students from Smartschool Studentcard API."""
+        headers = {
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": f"{self._base_url}/",
+            "Origin": self._base_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+        }
+
+        resp = self._session.post(
+            self._students_url,
+            data=None,
+            timeout=20,
+            allow_redirects=True,
+            headers=headers,
+        )
+        resp.raise_for_status()
+
+        if self._is_account_verification_page(resp) or self._is_login_page(resp):
+            _LOGGER.debug("Students API redirected to auth page — session lost")
+            return None
+
+        ctype = (resp.headers.get("Content-Type") or "").lower()
+        if "json" not in ctype:
+            _LOGGER.debug(
+                "Students API non-json response preview: %s",
+                (resp.text or "")[:200].replace("\n", " "),
+            )
+            return None
+
+        data = resp.json()
+        return data if isinstance(data, list) else None
+
+    def get_students(self) -> list:
+        """Return students linked to the current account."""
+        if not self._is_logged_in:
+            self.login()
+
+        students = None
+
+        try:
+            students = self._fetch_students()
+        except Exception as err:
+            _LOGGER.debug("Students API fetch failed: %s", err)
+
+        if students is None and self._is_logged_in:
+            _LOGGER.debug("No students data from API — forcing re-login")
+            try:
+                self._force_relogin()
+                students = self._fetch_students()
+            except Exception as err:
+                _LOGGER.debug("Students API re-login/retry failed: %s", err)
+
+        return students or []
